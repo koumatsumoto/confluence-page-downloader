@@ -43,7 +43,7 @@ describe("markdown-converter", () => {
       expect(markdown).toContain("# Test Page");
       expect(markdown).toContain("## Section");
       expect(markdown).toContain("**bold**");
-      expect(markdown).toContain("*italic*");
+      expect(markdown).toContain("_italic_");
     });
 
     test("should remove Confluence code blocks (current behavior)", () => {
