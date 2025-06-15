@@ -2,10 +2,12 @@
  * Page downloader implementation for the Confluence page downloader CLI
  */
 
+import { writeFile } from "fs/promises";
 import { loadConfig } from "./config.mts";
 import { ConfluenceClient } from "./confluence/client.mts";
 import { extractPageId, extractBaseUrl } from "./confluence/util.mts";
-import { savePageToFile } from "./file-writer.mts";
+import { convertToHtml } from "./converter/html-converter.mts";
+import { convertToMarkdown } from "./converter/markdown-converter.mts";
 import { resolve } from "path";
 
 export interface DownloadOptions {
@@ -34,9 +36,22 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
     const outputPath = `${pageId}.${options.format}`;
     const resolvedPath = resolve(outputPath);
 
+    // Convert content based on format
+    let content: string;
+    switch (options.format) {
+      case "html":
+        content = convertToHtml(pageData);
+        break;
+      case "md":
+        content = convertToMarkdown(pageData);
+        break;
+      default:
+        throw new Error(`Unsupported output format: ${options.format}`);
+    }
+
     // Save to file
     console.log(`Saving to ${resolvedPath}...`);
-    await savePageToFile(pageData, resolvedPath, options.format);
+    await writeFile(resolvedPath, content, "utf-8");
 
     console.log(`Successfully downloaded page "${pageData.title}" to ${resolvedPath}`);
   } catch (error) {

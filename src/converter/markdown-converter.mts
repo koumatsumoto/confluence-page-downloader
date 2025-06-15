@@ -1,21 +1,8 @@
 /**
- * File writer utilities for saving Confluence page content
+ * Markdown converter for Confluence page content
  */
 
-import { writeFile, mkdir } from "fs/promises";
-import { dirname } from "path";
-import type { ConfluencePage } from "./confluence/types.mts";
-
-/**
- * Convert Confluence export_view format to HTML
- */
-export function convertToHtml(page: ConfluencePage): string {
-  const content = page.body.export_view.value;
-
-  // Simple HTML content without full document structure
-  return `<h1>${escapeHtml(page.title)}</h1>
-${content}`;
-}
+import type { ConfluencePage } from "../confluence/types.mts";
 
 /**
  * Convert Confluence export_view format to Markdown (basic conversion)
@@ -60,50 +47,4 @@ export function convertToMarkdown(page: ConfluencePage): string {
     .trim();
 
   return `# ${page.title}\n\n${content}`;
-}
-
-/**
- * Escape HTML special characters
- */
-function escapeHtml(text: string): string {
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  };
-  return text.replace(/[&<>"']/g, (char) => map[char] || char);
-}
-
-/**
- * Save page content to file
- */
-export async function savePageToFile(page: ConfluencePage, filePath: string, format: "html" | "md"): Promise<void> {
-  try {
-    // Ensure directory exists
-    const dir = dirname(filePath);
-    await mkdir(dir, { recursive: true });
-
-    // Convert content based on format
-    let content: string;
-    switch (format) {
-      case "html":
-        content = convertToHtml(page);
-        break;
-      case "md":
-        content = convertToMarkdown(page);
-        break;
-      default:
-        throw new Error(`Unsupported output format: ${format}`);
-    }
-
-    // Write file
-    await writeFile(filePath, content, "utf-8");
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to save file: ${error.message}`);
-    }
-    throw new Error("Unknown error occurred while saving file");
-  }
 }
