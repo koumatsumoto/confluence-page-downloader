@@ -1,6 +1,6 @@
 {
   "name": "confluence-page-downloader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "confluence-page-downloader は、Confluence API を通じて指定ページのコンテンツを取得し、HTML または Markdown 形式で保存できる TypeScript/Node.js 製のコマンドラインツールです。",
   "main": "./src/cli.mts",
   "type": "module",
