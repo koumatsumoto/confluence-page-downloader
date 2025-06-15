@@ -75,7 +75,7 @@ Arguments:
 
 Options:
   -V, --version      output the version number
-  --format <format>  Output format: html or markdown (default: "markdown")
+  -f, --format <format>  Output format: html or md (default: "md")
   -h, --help         display help for command
 ```
 
@@ -129,7 +129,9 @@ cpdown <URL> output.md
 cpdown <URL> output.html
 
 # フォーマット明示指定
-cpdown <URL> --format html
+cpdown <URL> -f html
+# または
+cpdown <URL> --format md
 ```
 
 ## package.json設定

@@ -54,7 +54,7 @@ cpdown https://xxx.atlassian.net/wiki/spaces/ABC/pages/123456 ./docs/custom.md
 
 ## オプション
 
-- `--format <html|markdown>` : 出力形式を明示的に指定 (省略時は拡張子またはデフォルト設定を参照)
+- `-f, --format <html|md>` : 出力形式を明示的に指定 (省略時は拡張子またはデフォルト設定を参照)
 - `--help` : 使用方法の表示
 - `--version` : バージョン情報の表示
 

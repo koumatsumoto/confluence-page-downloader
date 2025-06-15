@@ -21,7 +21,7 @@ program
   .version(packageInfo.version)
   .argument("<url>", "Confluence page URL")
   .argument("[output]", "Output file path (optional)")
-  .option("--format <format>", "Output format: html or markdown", "markdown")
+  .option("-f, --format <format>", "Output format: html or md", "md")
   .action(async (url: string, output?: string, options?: { format?: string }) => {
     try {
       // Validate URL
@@ -32,10 +32,12 @@ program
       // Determine format
       let format: "html" | "markdown" = "markdown";
       if (options?.format) {
-        if (options.format !== "html" && options.format !== "markdown") {
-          throw new Error("Format must be either 'html' or 'markdown'");
+        // Normalize format values: accept html, md, markdown
+        const normalizedFormat = options.format === "md" ? "markdown" : options.format;
+        if (normalizedFormat !== "html" && normalizedFormat !== "markdown") {
+          throw new Error("Format must be 'html' or 'md'");
         }
-        format = options.format;
+        format = normalizedFormat;
       } else if (output) {
         // Auto-detect format from file extension
         const ext = output.split(".").pop()?.toLowerCase();
