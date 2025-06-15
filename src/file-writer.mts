@@ -1,0 +1,147 @@
+/**
+ * File writer utilities for saving Confluence page content
+ */
+
+import { writeFile, mkdir } from "fs/promises";
+import { dirname, extname } from "path";
+import type { ConfluencePage } from "./confluence-client.mts";
+
+export type OutputFormat = "html" | "markdown";
+
+/**
+ * Determine output format from file extension
+ */
+export function getOutputFormat(filePath: string): OutputFormat {
+  const ext = extname(filePath).toLowerCase();
+  switch (ext) {
+    case ".md":
+    case ".markdown":
+      return "markdown";
+    case ".html":
+    case ".htm":
+      return "html";
+    default:
+      return "markdown"; // Default to markdown
+  }
+}
+
+/**
+ * Convert Confluence storage format to HTML
+ */
+export function convertToHtml(page: ConfluencePage): string {
+  const content = page.body.storage.value;
+
+  // Basic HTML template
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(page.title)}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2, h3, h4, h5, h6 { color: #333; }
+        pre { background-color: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        code { background-color: #f5f5f5; padding: 2px 4px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+    <h1>${escapeHtml(page.title)}</h1>
+    ${content}
+</body>
+</html>`;
+}
+
+/**
+ * Convert Confluence storage format to Markdown (basic conversion)
+ */
+export function convertToMarkdown(page: ConfluencePage): string {
+  let content = page.body.storage.value;
+
+  // Basic HTML to Markdown conversion
+  content = content
+    // Remove XML namespaces and Confluence-specific attributes
+    .replace(/\s+xmlns[^=]*="[^"]*"/g, "")
+    .replace(/\s+ac:[^=]*="[^"]*"/g, "")
+    .replace(/\s+ri:[^=]*="[^"]*"/g, "")
+    // Convert code blocks (more specific pattern)
+    .replace(
+      /<ac:structured-macro[^>]*ac:name="code"[^>]*>[\s\S]*?<ac:plain-text-body[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/ac:plain-text-body>[\s\S]*?<\/ac:structured-macro>/g,
+      "```\n$1\n```",
+    )
+    // Convert headers
+    .replace(/<h1[^>]*>(.*?)<\/h1>/gi, "# $1")
+    .replace(/<h2[^>]*>(.*?)<\/h2>/gi, "## $1")
+    .replace(/<h3[^>]*>(.*?)<\/h3>/gi, "### $1")
+    .replace(/<h4[^>]*>(.*?)<\/h4>/gi, "#### $1")
+    .replace(/<h5[^>]*>(.*?)<\/h5>/gi, "##### $1")
+    .replace(/<h6[^>]*>(.*?)<\/h6>/gi, "###### $1")
+    // Convert paragraphs
+    .replace(/<p[^>]*>(.*?)<\/p>/gi, "$1\n\n")
+    // Convert strong/bold
+    .replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**")
+    .replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**")
+    // Convert emphasis/italic
+    .replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*")
+    .replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*")
+    // Convert inline code
+    .replace(/<code[^>]*>(.*?)<\/code>/gi, "`$1`")
+    // Convert line breaks
+    .replace(/<br\s*\/?>/gi, "\n")
+    // Remove remaining HTML tags (basic cleanup)
+    .replace(/<[^>]+>/g, "")
+    // Clean up extra whitespace
+    .replace(/\n\s*\n\s*\n/g, "\n\n")
+    .trim();
+
+  return `# ${page.title}\n\n${content}`;
+}
+
+/**
+ * Escape HTML special characters
+ */
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  };
+  return text.replace(/[&<>"']/g, (char) => map[char] || char);
+}
+
+/**
+ * Save page content to file
+ */
+export async function savePageToFile(page: ConfluencePage, filePath: string, format?: OutputFormat): Promise<void> {
+  try {
+    // Ensure directory exists
+    const dir = dirname(filePath);
+    await mkdir(dir, { recursive: true });
+
+    // Determine format
+    const outputFormat = format || getOutputFormat(filePath);
+
+    // Convert content based on format
+    let content: string;
+    switch (outputFormat) {
+      case "html":
+        content = convertToHtml(page);
+        break;
+      case "markdown":
+        content = convertToMarkdown(page);
+        break;
+      default:
+        throw new Error(`Unsupported output format: ${outputFormat}`);
+    }
+
+    // Write file
+    await writeFile(filePath, content, "utf-8");
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to save file: ${error.message}`);
+    }
+    throw new Error("Unknown error occurred while saving file");
+  }
+}

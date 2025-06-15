@@ -4,6 +4,51 @@
 
 このプロジェクトは、ESモジュール（`package.json`に`"type": "module"`を設定）として構成されたTypeScriptアプリケーションです。
 
+Confluence API v2を使用してページコンテンツを取得し、HTML/Markdown形式で保存する機能を提供します。
+
+## 機能
+
+- **設定管理** (`config.mts`) - 環境変数による認証情報管理
+- **Confluence APIクライアント** (`confluence-client.mts`) - ページ取得機能
+- **ファイル保存** (`file-writer.mts`) - HTML/Markdown形式でのファイル保存
+- **メイン機能** (`main.mts`) - ページダウンロードの統合機能
+
+## API仕様
+
+### 環境変数
+
+以下の環境変数が必要です：
+
+- `CONFLUENCE_BASE_URL`: Confluence WikiのベースURL (例: `https://xxx.atlassian.net/wiki`)
+- `CONFLUENCE_USERNAME`: ユーザー名またはメールアドレス
+- `CONFLUENCE_API_TOKEN`: API トークン
+
+### 主要な関数
+
+#### `downloadPage(options: DownloadOptions)`
+
+Confluenceページをダウンロードしてファイルとして保存します。
+
+```typescript
+interface DownloadOptions {
+  url: string; // Confluence ページのURL
+  outputPath?: string; // 出力先ファイルパス（省略時は自動生成）
+  format?: OutputFormat; // 出力形式 ('html' | 'markdown')
+}
+```
+
+#### `extractPageId(url: string)`
+
+Confluence URLからページIDを抽出します。
+
+#### `fetchConfluencePage(config, pageId)`
+
+指定されたページIDのコンテンツをConfluence APIから取得します。
+
+#### `savePageToFile(page, filePath, format?)`
+
+ページデータを指定された形式でファイルに保存します。
+
 ## 依存関係
 
 プロジェクトでは以下の依存関係を使用しています：
