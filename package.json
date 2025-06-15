@@ -3,13 +3,9 @@
   "version": "1.0.0",
   "description": "confluence-page-downloader は、Confluence API を通じて指定ページのコンテンツを取得し、HTML または Markdown 形式で保存できる TypeScript/Node.js 製のコマンドラインツールです。",
   "main": "src/main.mts",
-  "scripts": {
-    "build": "tsc",
-    "fmt": "prettier -w .",
-    "fmt:check": "prettier -c .",
-    "ci": "npm run fmt:check && npm run build && npm run test",
-    "start": "node src/main.mts",
-    "test": "vitest run --coverage"
+  "type": "module",
+  "bin": {
+    "cpdown": "./src/cli.mts"
   },
   "repository": {
     "type": "git",
@@ -18,13 +14,20 @@
   "keywords": [],
   "author": "Kou Matsumoto",
   "license": "MIT",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/koumatsumoto/confluence-page-downloader/issues"
   },
   "homepage": "https://github.com/koumatsumoto/confluence-page-downloader#readme",
-  "prettier": {
-    "printWidth": 140
+  "scripts": {
+    "build": "tsc",
+    "fmt": "prettier -w .",
+    "fmt:check": "prettier -c .",
+    "ci": "npm run fmt:check && npm run build && npm run test",
+    "start": "node src/main.mts",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "commander": "^14.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.1",
@@ -32,5 +35,8 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"
+  },
+  "prettier": {
+    "printWidth": 140
   }
 }
