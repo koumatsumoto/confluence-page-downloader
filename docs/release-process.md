@@ -2,6 +2,22 @@
 
 この文書は confluence-page-downloader パッケージのリリースプロセスについて説明します。
 
+## バージョンアップ・タグ付け手順
+
+リリース時には以下コマンドで version を上げてタグ付けします：
+
+```sh
+npm version [patch|minor|major] -m "chore(release): publish version %s"
+```
+
+開発時のリリースコマンド
+
+```sh
+npm version major -m "chore(release): publish version %s"
+npm version minor -m "chore(release): publish version %s"
+npm version patch -m "chore(release): publish version %s"
+```
+
 ## 前提条件
 
 1. GitHub リポジトリの設定で `NPM_TOKEN` シークレットが設定されていること
