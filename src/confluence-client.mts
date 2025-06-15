@@ -37,9 +37,9 @@ export function extractPageId(url: string): string {
 /**
  * Fetch a Confluence page by ID
  */
-export async function fetchConfluencePage(config: ConfluenceConfig, pageId: string): Promise<ConfluencePage> {
-  const url = `${config.baseUrl}/api/v2/pages/${pageId}?body-format=export_view`;
-  const authHeader = createAuthHeader(config.username, config.apiToken);
+export async function fetchConfluencePage(baseUrl: string, config: ConfluenceConfig, pageId: string): Promise<ConfluencePage> {
+  const url = `${baseUrl}/api/v2/pages/${pageId}?body-format=export_view`;
+  const authHeader = createAuthHeader(config.userEmail, config.apiToken);
 
   try {
     const response = await fetch(url, {

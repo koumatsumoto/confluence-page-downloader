@@ -3,8 +3,7 @@
  */
 
 export interface ConfluenceConfig {
-  baseUrl: string;
-  username: string;
+  userEmail: string;
   apiToken: string;
 }
 
@@ -12,16 +11,11 @@ export interface ConfluenceConfig {
  * Load configuration from environment variables
  */
 export function loadConfig(): ConfluenceConfig {
-  const baseUrl = process.env["CONFLUENCE_BASE_URL"];
-  const username = process.env["CONFLUENCE_USERNAME"];
+  const userEmail = process.env["CONFLUENCE_USER_EMAIL"];
   const apiToken = process.env["CONFLUENCE_API_TOKEN"];
 
-  if (!baseUrl) {
-    throw new Error("CONFLUENCE_BASE_URL environment variable is required");
-  }
-
-  if (!username) {
-    throw new Error("CONFLUENCE_USERNAME environment variable is required");
+  if (!userEmail) {
+    throw new Error("CONFLUENCE_USER_EMAIL environment variable is required");
   }
 
   if (!apiToken) {
@@ -29,8 +23,7 @@ export function loadConfig(): ConfluenceConfig {
   }
 
   return {
-    baseUrl: baseUrl.replace(/\/+$/, ""), // Remove trailing slashes
-    username,
+    userEmail,
     apiToken,
   };
 }
@@ -38,7 +31,7 @@ export function loadConfig(): ConfluenceConfig {
 /**
  * Create Basic Authentication header value
  */
-export function createAuthHeader(username: string, apiToken: string): string {
-  const credentials = `${username}:${apiToken}`;
+export function createAuthHeader(userEmail: string, apiToken: string): string {
+  const credentials = `${userEmail}:${apiToken}`;
   return `Basic ${Buffer.from(credentials).toString("base64")}`;
 }

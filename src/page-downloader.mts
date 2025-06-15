@@ -13,6 +13,18 @@ export interface DownloadOptions {
 }
 
 /**
+ * Extract base URL from Confluence page URL
+ */
+export function extractBaseUrl(url: string): string {
+  // Pattern: https://xxx.atlassian.net/wiki/spaces/ABC/pages/123456/page-title
+  const match = url.match(/(https:\/\/[^\/]+\/wiki)/);
+  if (!match || !match[1]) {
+    throw new Error(`Invalid Confluence URL format: ${url}`);
+  }
+  return match[1];
+}
+
+/**
  * Download a Confluence page and save it to a file
  */
 export async function downloadPage(options: DownloadOptions): Promise<void> {
@@ -20,12 +32,13 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
     // Load configuration
     const config = loadConfig();
 
-    // Extract page ID from URL
+    // Extract base URL and page ID from URL
+    const baseUrl = extractBaseUrl(options.url);
     const pageId = extractPageId(options.url);
 
     // Fetch page data
     console.log(`Fetching page ${pageId}...`);
-    const pageData = await fetchConfluencePage(config, pageId);
+    const pageData = await fetchConfluencePage(baseUrl, config, pageId);
 
     // Generate output path
     const outputPath = `${pageId}.${options.format}`;
@@ -67,8 +80,7 @@ export async function handleCliAction(url: string, options: { format: "html" | "
     // Provide helpful hints for common issues
     if (error instanceof Error && error.message.includes("Missing required environment variables")) {
       console.error("\nPlease set the following environment variables:");
-      console.error('  export CONFLUENCE_BASE_URL="https://xxx.atlassian.net/wiki"');
-      console.error('  export CONFLUENCE_USERNAME="your-username"');
+      console.error('  export CONFLUENCE_USER_EMAIL="your-email@company.com"');
       console.error('  export CONFLUENCE_API_TOKEN="your-api-token"');
     }
 

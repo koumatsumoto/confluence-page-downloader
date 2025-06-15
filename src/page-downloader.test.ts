@@ -2,6 +2,7 @@ import { describe, test, beforeEach, afterEach, expect, vi } from "vitest";
 import * as config from "./config.mts";
 import * as confluenceClient from "./confluence-client.mts";
 import * as fileWriter from "./file-writer.mts";
+import { extractBaseUrl } from "./page-downloader.mts";
 
 // Mock dependencies
 vi.mock("./config.mts");
@@ -26,10 +27,31 @@ describe("page-downloader", () => {
     vi.restoreAllMocks();
   });
 
+  describe("extractBaseUrl", () => {
+    test("should extract base URL from valid Confluence URL", () => {
+      const url = "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/page-title";
+      const baseUrl = extractBaseUrl(url);
+      expect(baseUrl).toBe("https://example.atlassian.net/wiki");
+    });
+
+    test("should extract base URL from URL without page title", () => {
+      const url = "https://example.atlassian.net/wiki/spaces/ABC/pages/789012";
+      const baseUrl = extractBaseUrl(url);
+      expect(baseUrl).toBe("https://example.atlassian.net/wiki");
+    });
+
+    test("should throw error for invalid URL format", () => {
+      const invalidUrls = ["https://example.com/invalid", "https://example.atlassian.net/spaces/ABC", "not-a-url"];
+
+      invalidUrls.forEach((url) => {
+        expect(() => extractBaseUrl(url)).toThrow(`Invalid Confluence URL format: ${url}`);
+      });
+    });
+  });
+
   describe("downloadPage", () => {
     const mockConfig = {
-      baseUrl: "https://example.atlassian.net/wiki",
-      username: "test@example.com",
+      userEmail: "test@example.com",
       apiToken: "test-token",
     };
 
@@ -65,7 +87,7 @@ describe("page-downloader", () => {
 
       expect(mockLoadConfig).toHaveBeenCalled();
       expect(mockExtractPageId).toHaveBeenCalledWith("https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page");
-      expect(mockFetchConfluencePage).toHaveBeenCalledWith(mockConfig, "123456");
+      expect(mockFetchConfluencePage).toHaveBeenCalledWith("https://example.atlassian.net/wiki", mockConfig, "123456");
       expect(mockSavePageToFile).toHaveBeenCalledWith(mockPageData, expect.stringContaining("123456.md"), "md");
 
       expect(consoleSpy).toHaveBeenCalledWith("Fetching page 123456...");

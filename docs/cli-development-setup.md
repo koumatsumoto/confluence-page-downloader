@@ -96,10 +96,11 @@ cpdown --version
 実際のConfluence APIを使用してテストする場合は、以下の環境変数を設定：
 
 ```bash
-export CONFLUENCE_BASE_URL="https://your-domain.atlassian.net/wiki"
-export CONFLUENCE_USERNAME="your-username"
+export CONFLUENCE_USER_EMAIL="your-email@company.com"
 export CONFLUENCE_API_TOKEN="your-api-token"
 ```
+
+**注意**: ベースURLは不要になりました。CLI実行時に引数として指定されたURLから自動的に抽出されます。
 
 ## 開発時のテスト方法
 

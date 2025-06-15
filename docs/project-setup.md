@@ -19,9 +19,10 @@ Confluence API v2を使用してページコンテンツを取得し、HTML/Mark
 
 以下の環境変数が必要です：
 
-- `CONFLUENCE_BASE_URL`: Confluence WikiのベースURL (例: `https://xxx.atlassian.net/wiki`)
-- `CONFLUENCE_USERNAME`: ユーザー名またはメールアドレス
+- `CONFLUENCE_USER_EMAIL`: ユーザーのメールアドレス
 - `CONFLUENCE_API_TOKEN`: API トークン
+
+**注意**: `CONFLUENCE_BASE_URL` は削除されました。CLI実行時に引数として指定されたURLから自動的にベースURLが抽出されます。
 
 ### 主要な関数
 
