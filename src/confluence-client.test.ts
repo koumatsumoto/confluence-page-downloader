@@ -59,9 +59,9 @@ describe("confluence-client", () => {
       id: "123456",
       title: "Test Page",
       body: {
-        storage: {
+        export_view: {
           value: "<p>Test content</p>",
-          representation: "storage",
+          representation: "export_view",
         },
       },
       _links: {
@@ -79,7 +79,7 @@ describe("confluence-client", () => {
 
       const result = await fetchConfluencePage(mockConfig, "123456");
 
-      expect(mockFetch).toHaveBeenCalledWith("https://example.atlassian.net/wiki/api/v2/pages/123456?body-format=storage", {
+      expect(mockFetch).toHaveBeenCalledWith("https://example.atlassian.net/wiki/api/v2/pages/123456?body-format=export_view", {
         method: "GET",
         headers: {
           Authorization: expect.stringMatching(/^Basic /),

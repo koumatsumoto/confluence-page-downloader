@@ -26,37 +26,21 @@ export function getOutputFormat(filePath: string): OutputFormat {
 }
 
 /**
- * Convert Confluence storage format to HTML
+ * Convert Confluence export_view format to HTML
  */
 export function convertToHtml(page: ConfluencePage): string {
-  const content = page.body.storage.value;
+  const content = page.body.export_view.value;
 
-  // Basic HTML template
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(page.title)}</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        h1, h2, h3, h4, h5, h6 { color: #333; }
-        pre { background-color: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
-        code { background-color: #f5f5f5; padding: 2px 4px; border-radius: 2px; }
-    </style>
-</head>
-<body>
-    <h1>${escapeHtml(page.title)}</h1>
-    ${content}
-</body>
-</html>`;
+  // Simple HTML content without full document structure
+  return `<h1>${escapeHtml(page.title)}</h1>
+${content}`;
 }
 
 /**
- * Convert Confluence storage format to Markdown (basic conversion)
+ * Convert Confluence export_view format to Markdown (basic conversion)
  */
 export function convertToMarkdown(page: ConfluencePage): string {
-  let content = page.body.storage.value;
+  let content = page.body.export_view.value;
 
   // Basic HTML to Markdown conversion
   content = content

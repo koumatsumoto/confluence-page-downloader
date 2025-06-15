@@ -69,9 +69,9 @@ describe("main", () => {
       id: "123456",
       title: "Test Page",
       body: {
-        storage: {
+        export_view: {
           value: "<p>Test content</p>",
-          representation: "storage",
+          representation: "export_view",
         },
       },
       _links: {

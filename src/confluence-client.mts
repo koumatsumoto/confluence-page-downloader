@@ -8,7 +8,7 @@ export interface ConfluencePage {
   id: string;
   title: string;
   body: {
-    storage: {
+    export_view: {
       value: string;
       representation: string;
     };
@@ -38,7 +38,7 @@ export function extractPageId(url: string): string {
  * Fetch a Confluence page by ID
  */
 export async function fetchConfluencePage(config: ConfluenceConfig, pageId: string): Promise<ConfluencePage> {
-  const url = `${config.baseUrl}/api/v2/pages/${pageId}?body-format=storage`;
+  const url = `${config.baseUrl}/api/v2/pages/${pageId}?body-format=export_view`;
   const authHeader = createAuthHeader(config.username, config.apiToken);
 
   try {

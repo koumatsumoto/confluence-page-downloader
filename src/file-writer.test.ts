@@ -56,9 +56,9 @@ describe("file-writer", () => {
       id: "123456",
       title: "Test Page",
       body: {
-        storage: {
+        export_view: {
           value: "<p>Test content with <strong>bold</strong> text</p>",
-          representation: "storage",
+          representation: "export_view",
         },
       },
       _links: {
@@ -69,10 +69,10 @@ describe("file-writer", () => {
     test("should convert page to HTML format", () => {
       const html = convertToHtml(mockPage);
 
-      expect(html).toContain("<!DOCTYPE html>");
-      expect(html).toContain("<title>Test Page</title>");
       expect(html).toContain("<h1>Test Page</h1>");
       expect(html).toContain("<p>Test content with <strong>bold</strong> text</p>");
+      expect(html).not.toContain("<!DOCTYPE html>");
+      expect(html).not.toContain("<title>");
     });
 
     test("should escape HTML in title", () => {
@@ -83,8 +83,8 @@ describe("file-writer", () => {
 
       const html = convertToHtml(pageWithSpecialChars);
 
-      expect(html).toContain("<title>Test &amp; &quot;Page&quot; &lt;with&gt; &#39;special&#39; chars</title>");
       expect(html).toContain("<h1>Test &amp; &quot;Page&quot; &lt;with&gt; &#39;special&#39; chars</h1>");
+      expect(html).not.toContain("<title>");
     });
   });
 
@@ -94,9 +94,9 @@ describe("file-writer", () => {
         id: "123456",
         title: "Test Page",
         body: {
-          storage: {
+          export_view: {
             value: "",
-            representation: "storage",
+            representation: "export_view",
           },
         },
         _links: {
@@ -114,9 +114,9 @@ describe("file-writer", () => {
       id: "123456",
       title: "Test Page",
       body: {
-        storage: {
+        export_view: {
           value: "<p>Test content</p>",
-          representation: "storage",
+          representation: "export_view",
         },
       },
       _links: {
@@ -145,7 +145,7 @@ describe("file-writer", () => {
 
       await savePageToFile(mockPage, "test.html");
 
-      expect(mockWriteFile).toHaveBeenCalledWith("test.html", expect.stringContaining("<!DOCTYPE html>"), "utf-8");
+      expect(mockWriteFile).toHaveBeenCalledWith("test.html", expect.stringContaining("<h1>Test Page</h1>"), "utf-8");
     });
 
     test("should use explicit format parameter", async () => {
@@ -154,7 +154,7 @@ describe("file-writer", () => {
 
       await savePageToFile(mockPage, "test.txt", "html");
 
-      expect(mockWriteFile).toHaveBeenCalledWith("test.txt", expect.stringContaining("<!DOCTYPE html>"), "utf-8");
+      expect(mockWriteFile).toHaveBeenCalledWith("test.txt", expect.stringContaining("<h1>Test Page</h1>"), "utf-8");
     });
 
     test("should create directory if it doesn't exist", async () => {
