@@ -27,11 +27,3 @@ export function loadConfig(): ConfluenceConfig {
     apiToken,
   };
 }
-
-/**
- * Create Basic Authentication header value
- */
-export function createAuthHeader(userEmail: string, apiToken: string): string {
-  const credentials = `${userEmail}:${apiToken}`;
-  return `Basic ${Buffer.from(credentials).toString("base64")}`;
-}

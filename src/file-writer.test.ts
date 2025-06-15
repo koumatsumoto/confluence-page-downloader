@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { convertToHtml, convertToMarkdown, savePageToFile } from "./file-writer.mts";
-import type { ConfluencePage } from "./confluence-client.mts";
+import type { ConfluencePage } from "./confluence/types.mts";
 
 // Mock fs
 vi.mock("fs/promises", () => ({

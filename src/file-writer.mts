@@ -4,7 +4,7 @@
 
 import { writeFile, mkdir } from "fs/promises";
 import { dirname } from "path";
-import type { ConfluencePage } from "./confluence-client.mts";
+import type { ConfluencePage } from "./confluence/types.mts";
 
 /**
  * Convert Confluence export_view format to HTML

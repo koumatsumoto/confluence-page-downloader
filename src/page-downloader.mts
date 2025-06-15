@@ -3,7 +3,7 @@
  */
 
 import { loadConfig } from "./config.mts";
-import { extractPageId, fetchConfluencePage } from "./confluence-client.mts";
+import { extractPageId, ConfluenceClient } from "./confluence/client.mts";
 import { savePageToFile } from "./file-writer.mts";
 import { resolve } from "path";
 
@@ -36,9 +36,10 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
     const baseUrl = extractBaseUrl(options.url);
     const pageId = extractPageId(options.url);
 
-    // Fetch page data
+    // Create Confluence client and fetch page data
     console.log(`Fetching page ${pageId}...`);
-    const pageData = await fetchConfluencePage(baseUrl, config, pageId);
+    const client = new ConfluenceClient(baseUrl, config.userEmail, config.apiToken);
+    const pageData = await client.fetchPage(pageId);
 
     // Generate output path
     const outputPath = `${pageId}.${options.format}`;

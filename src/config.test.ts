@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import { loadConfig, createAuthHeader } from "./config.mts";
+import { loadConfig } from "./config.mts";
 
 describe("config", () => {
   const originalEnv = process.env;
@@ -35,28 +35,6 @@ describe("config", () => {
       process.env["CONFLUENCE_USER_EMAIL"] = "test@example.com";
 
       expect(() => loadConfig()).toThrow("CONFLUENCE_API_TOKEN environment variable is required");
-    });
-  });
-
-  describe("createAuthHeader", () => {
-    test("should create correct Basic Auth header", () => {
-      const userEmail = "test@example.com";
-      const apiToken = "test-token";
-
-      const authHeader = createAuthHeader(userEmail, apiToken);
-
-      const expectedCredentials = Buffer.from("test@example.com:test-token").toString("base64");
-      expect(authHeader).toBe(`Basic ${expectedCredentials}`);
-    });
-
-    test("should handle special characters in credentials", () => {
-      const userEmail = "user+test@example.com";
-      const apiToken = "token-with-special-chars!@#";
-
-      const authHeader = createAuthHeader(userEmail, apiToken);
-
-      const expectedCredentials = Buffer.from("user+test@example.com:token-with-special-chars!@#").toString("base64");
-      expect(authHeader).toBe(`Basic ${expectedCredentials}`);
     });
   });
 });
