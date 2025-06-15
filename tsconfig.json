@@ -1,0 +1,49 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2022",
+    "outDir": "out",
+    "lib": ["ES2022"],
+    "sourceMap": true,
+    "rootDir": "src",
+    "noEmit": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "useUnknownInCatchVariables": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+
+    /* JS/JSON Interop */
+    "checkJs": true,
+    "resolveJsonModule": true,
+
+    /* Module Resolution Options */
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": true,
+
+    /* Emit Options */
+    "useDefineForClassFields": true,
+
+    /* Additional Checks */
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
