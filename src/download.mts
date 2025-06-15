@@ -2,13 +2,12 @@
  * Page downloader implementation for the Confluence page downloader CLI
  */
 
-import { writeFile } from "fs/promises";
+import { writeFile } from "node:fs/promises";
 import { loadConfig } from "./config.mts";
 import { ConfluenceClient } from "./confluence/client.mts";
 import { extractPageId, extractBaseUrl } from "./confluence/util.mts";
 import { convertToHtml } from "./converter/html-converter.mts";
 import { convertToMarkdown } from "./converter/markdown-converter.mts";
-import { resolve } from "path";
 
 /**
  * Download a Confluence page and save it to a file
@@ -34,7 +33,6 @@ export async function downloadPage(url: string, options: { format: "html" | "md"
 
     // Generate output path
     const outputPath = `${pageId}.${options.format}`;
-    const resolvedPath = resolve(outputPath);
 
     // Convert content based on format
     let content: string;
@@ -50,10 +48,10 @@ export async function downloadPage(url: string, options: { format: "html" | "md"
     }
 
     // Save to file
-    console.log(`Saving to ${resolvedPath}...`);
-    await writeFile(resolvedPath, content, "utf-8");
+    console.log(`Saving to ${outputPath}...`);
+    await writeFile(outputPath, content, "utf-8");
 
-    console.log(`Successfully downloaded page "${pageData.title}" to ${resolvedPath}`);
+    console.log(`Successfully downloaded page "${pageData.title}" to ${outputPath}`);
   } catch (error) {
     console.error("Error:", error instanceof Error ? error.message : "Unknown error");
 
