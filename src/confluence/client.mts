@@ -4,21 +4,6 @@
 
 import type { ConfluencePage } from "./types.mts";
 
-// Re-export types for convenience
-export type { ConfluencePage } from "./types.mts";
-
-/**
- * Extract page ID from Confluence URL
- */
-export function extractPageId(url: string): string {
-  // Pattern: https://xxx.atlassian.net/wiki/spaces/ABC/pages/123456/page-title
-  const match = url.match(/\/pages\/(\d+)/);
-  if (!match || !match[1]) {
-    throw new Error(`Invalid Confluence URL format: ${url}`);
-  }
-  return match[1];
-}
-
 /**
  * Confluence API client class
  */

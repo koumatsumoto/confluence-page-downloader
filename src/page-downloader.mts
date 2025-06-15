@@ -3,25 +3,14 @@
  */
 
 import { loadConfig } from "./config.mts";
-import { extractPageId, ConfluenceClient } from "./confluence/client.mts";
+import { ConfluenceClient } from "./confluence/client.mts";
+import { extractPageId, extractBaseUrl } from "./confluence/util.mts";
 import { savePageToFile } from "./file-writer.mts";
 import { resolve } from "path";
 
 export interface DownloadOptions {
   url: string;
   format: "html" | "md";
-}
-
-/**
- * Extract base URL from Confluence page URL
- */
-export function extractBaseUrl(url: string): string {
-  // Pattern: https://xxx.atlassian.net/wiki/spaces/ABC/pages/123456/page-title
-  const match = url.match(/(https:\/\/[^\/]+\/wiki)/);
-  if (!match || !match[1]) {
-    throw new Error(`Invalid Confluence URL format: ${url}`);
-  }
-  return match[1];
 }
 
 /**

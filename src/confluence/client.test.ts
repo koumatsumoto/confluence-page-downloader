@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
-import { extractPageId, ConfluenceClient } from "./client.mts";
+import { ConfluenceClient } from "./client.mts";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -12,39 +12,6 @@ describe("confluence-client", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-  });
-
-  describe("extractPageId", () => {
-    test("should extract page ID from valid Confluence URL", () => {
-      const url = "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/page-title";
-      const pageId = extractPageId(url);
-      expect(pageId).toBe("123456");
-    });
-
-    test("should extract page ID from URL without page title", () => {
-      const url = "https://example.atlassian.net/wiki/spaces/ABC/pages/789012";
-      const pageId = extractPageId(url);
-      expect(pageId).toBe("789012");
-    });
-
-    test("should extract page ID from URL with query parameters", () => {
-      const url = "https://example.atlassian.net/wiki/spaces/ABC/pages/456789/page-title?view=edit";
-      const pageId = extractPageId(url);
-      expect(pageId).toBe("456789");
-    });
-
-    test("should throw error for invalid URL format", () => {
-      const invalidUrls = [
-        "https://example.com/invalid",
-        "https://example.atlassian.net/wiki/spaces/ABC",
-        "https://example.atlassian.net/wiki/spaces/ABC/pages/",
-        "https://example.atlassian.net/wiki/spaces/ABC/pages/abc123",
-      ];
-
-      invalidUrls.forEach((url) => {
-        expect(() => extractPageId(url)).toThrow(`Invalid Confluence URL format: ${url}`);
-      });
-    });
   });
 
   describe("ConfluenceClient", () => {
