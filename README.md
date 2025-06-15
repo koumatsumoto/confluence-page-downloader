@@ -1,0 +1,2 @@
+# confluence-page-downloader
+APIを利用し、指定したConfluenceページをHTMLまたはMarkdown形式で取得・保存するNode.js製CLIツールです。URLと保存先パスを指定するだけのシンプル操作で、ドキュメント移行やバックアップに活用できます。
