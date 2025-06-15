@@ -4,6 +4,12 @@
   "description": "confluence-page-downloader は、Confluence API を通じて指定ページのコンテンツを取得し、HTML または Markdown 形式で保存できる TypeScript/Node.js 製のコマンドラインツールです。",
   "main": "./src/cli.mts",
   "type": "module",
+  "files": [
+    "src/**/*.mts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "cpdown": "./src/cli.mts"
   },
@@ -24,7 +30,8 @@
     "fmt:check": "prettier -c .",
     "ci": "npm run fmt:check && npm run build && npm run test",
     "start": "node ./src/cli.mts",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "prepublishOnly": "npm run ci"
   },
   "dependencies": {
     "commander": "^14.0.0",
