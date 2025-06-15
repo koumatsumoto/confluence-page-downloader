@@ -42,10 +42,6 @@ interface DownloadOptions {
 
 Confluence URLからページIDを抽出します。
 
-#### `fetchConfluencePage(config, pageId)`
-
-指定されたページIDのコンテンツをConfluence APIから取得します。
-
 #### `savePageToFile(page, filePath, format?)`
 
 ページデータを指定された形式でファイルに保存します。

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
-import { extractPageId, fetchConfluencePage, ConfluenceClient } from "./client.mts";
+import { extractPageId, ConfluenceClient } from "./client.mts";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -134,50 +134,6 @@ describe("confluence-client", () => {
           }),
         }),
       );
-    });
-  });
-
-  describe("fetchConfluencePage (deprecated)", () => {
-    const mockConfig = {
-      userEmail: "test@example.com",
-      apiToken: "test-token",
-    };
-
-    const baseUrl = "https://example.atlassian.net/wiki";
-
-    const mockPageData = {
-      id: "123456",
-      title: "Test Page",
-      body: {
-        export_view: {
-          value: "<p>Test content</p>",
-          representation: "export_view",
-        },
-      },
-      _links: {
-        webui: "/spaces/ABC/pages/123456/Test+Page",
-      },
-    };
-
-    test("should fetch page successfully using deprecated function", async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        statusText: "OK",
-        json: async () => mockPageData,
-      });
-
-      const result = await fetchConfluencePage(baseUrl, mockConfig, "123456");
-
-      expect(mockFetch).toHaveBeenCalledWith("https://example.atlassian.net/wiki/api/v2/pages/123456?body-format=export_view", {
-        method: "GET",
-        headers: {
-          Authorization: expect.stringMatching(/^Basic /),
-          Accept: "application/json",
-        },
-      });
-
-      expect(result).toEqual(mockPageData);
     });
   });
 });

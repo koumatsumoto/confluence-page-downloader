@@ -71,16 +71,3 @@ export class ConfluenceClient {
     }
   }
 }
-
-/**
- * Fetch a Confluence page by ID (deprecated: use ConfluenceClient instead)
- * @deprecated Use ConfluenceClient class instead
- */
-export async function fetchConfluencePage(
-  baseUrl: string,
-  config: { userEmail: string; apiToken: string },
-  pageId: string,
-): Promise<ConfluencePage> {
-  const client = new ConfluenceClient(baseUrl, config.userEmail, config.apiToken);
-  return client.fetchPage(pageId);
-}
