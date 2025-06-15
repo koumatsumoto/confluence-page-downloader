@@ -9,7 +9,6 @@ import { resolve } from "path";
 
 export interface DownloadOptions {
   url: string;
-  outputPath?: string;
   format?: OutputFormat;
 }
 
@@ -37,7 +36,7 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
     const pageData = await fetchConfluencePage(config, pageId);
 
     // Determine output path and format
-    const outputPath = options.outputPath || generateDefaultFilename(pageId, options.format);
+    const outputPath = generateDefaultFilename(pageId, options.format);
     const resolvedPath = resolve(outputPath);
 
     // Save to file
@@ -56,7 +55,7 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
 /**
  * Handle CLI action for downloading Confluence pages
  */
-export async function handleCliAction(url: string, output?: string, options?: { format?: string }) {
+export async function handleCliAction(url: string, options?: { format?: string }) {
   try {
     // Validate URL
     if (!url || !url.includes("atlassian.net")) {
@@ -72,21 +71,12 @@ export async function handleCliAction(url: string, output?: string, options?: { 
         throw new Error("Format must be 'html' or 'md'");
       }
       format = normalizedFormat;
-    } else if (output) {
-      // Auto-detect format from file extension
-      const ext = output.split(".").pop()?.toLowerCase();
-      if (ext === "html") {
-        format = "html";
-      } else if (ext === "md" || ext === "markdown") {
-        format = "markdown";
-      }
     }
 
     // Download page
     const downloadOptions = {
       url,
       format,
-      ...(output && { outputPath: output }),
     };
 
     await downloadPage(downloadOptions);

@@ -17,10 +17,9 @@ program
   .description(packageInfo.description)
   .version(packageInfo.version)
   .argument("<url>", "Confluence page URL")
-  .argument("[output]", "Output file path (optional)")
   .option("-f, --format <format>", "Output format: html or md", "md")
-  .action(async (url: string, output?: string, options?: { format?: string }) => {
-    await handleCliAction(url, output, options);
+  .action(async (url: string, options?: { format?: string }) => {
+    await handleCliAction(url, options);
   });
 
 // Parse command line arguments
