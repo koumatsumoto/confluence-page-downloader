@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { extractPageId, extractBaseUrl } from "./util.mts";
+import { extractPageId, extractBaseUrl } from "./util";
 
 describe("extractBaseUrl", () => {
   it("should extract base URL from valid Confluence URL", () => {

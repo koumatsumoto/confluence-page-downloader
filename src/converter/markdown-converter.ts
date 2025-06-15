@@ -4,7 +4,7 @@
 
 import TurndownService from "turndown";
 const { gfm } = require("turndown-plugin-gfm");
-import type { ConfluencePage } from "../confluence/types.mts";
+import type { ConfluencePage } from "../confluence/types";
 
 // Create and configure Turndown service
 const turndownService = new TurndownService({

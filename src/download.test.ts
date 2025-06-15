@@ -1,21 +1,22 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { downloadPage } from "./download.mts";
+import { downloadPage } from "./download";
 
 // Mock modules
 vi.mock("node:fs/promises", () => ({
   writeFile: vi.fn(),
 }));
 
-vi.mock("./config.mts", () => ({
+vi.mock("./config", () => ({
   loadConfig: vi.fn(() => ({
     userEmail: "test@example.com",
     apiToken: "test-api-token",
   })),
 }));
 
-const { writeFile } = await import("node:fs/promises");
+import { writeFile } from "node:fs/promises";
+import { loadConfig } from "./config";
 
 // MSW server setup
 const mockPageData = {
@@ -173,7 +174,6 @@ describe("download", () => {
 
     test("should provide helpful hints for configuration errors", async () => {
       // Mock loadConfig to throw a configuration error
-      const { loadConfig } = await import("./config.mts");
       vi.mocked(loadConfig).mockImplementationOnce(() => {
         throw new Error("Missing required environment variables");
       });

@@ -3,11 +3,11 @@
   "compilerOptions": {
     "module": "Node16",
     "target": "ES2022",
-    "outDir": "out",
+    "outDir": "dist",
     "lib": ["ES2022"],
     "sourceMap": true,
     "rootDir": "src",
-    "noEmit": true,
+    "noEmit": false,
 
     /* Strict Type-Checking Options */
     "strict": true,
@@ -37,7 +37,6 @@
     /* Module Resolution Options */
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
-    "allowImportingTsExtensions": true,
 
     /* Emit Options */
     "useDefineForClassFields": true,

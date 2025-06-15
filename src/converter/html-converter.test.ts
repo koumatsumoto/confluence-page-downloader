@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { convertToHtml } from "./html-converter.mts";
-import type { ConfluencePage } from "../confluence/types.mts";
+import { convertToHtml } from "./html-converter";
+import type { ConfluencePage } from "../confluence/types";
 
 describe("html-converter", () => {
   describe("convertToHtml", () => {

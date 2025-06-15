@@ -1,7 +1,7 @@
-#!/usr/bin/env -S node --experimental-strip-types
+#!/usr/bin/env node
 
 import { Command, Option } from "commander";
-import { downloadPage } from "./download.mts";
+import { downloadPage } from "./download";
 
 const program = new Command();
 

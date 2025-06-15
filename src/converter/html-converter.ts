@@ -2,7 +2,7 @@
  * HTML converter for Confluence page content
  */
 
-import type { ConfluencePage } from "../confluence/types.mts";
+import type { ConfluencePage } from "../confluence/types";
 
 /**
  * Convert Confluence export_view format to HTML

@@ -2,16 +2,16 @@
   "name": "confluence-page-downloader",
   "version": "1.0.1",
   "description": "confluence-page-downloader は、Confluence API を通じて指定ページのコンテンツを取得し、HTML または Markdown 形式で保存できる TypeScript/Node.js 製のコマンドラインツールです。",
-  "main": "./src/cli.mts",
-  "type": "module",
+  "main": "./dist/cli.js",
   "files": [
-    "src/**/*.mts"
+    "dist/**/*.js",
+    "dist/**/*.js.map"
   ],
   "publishConfig": {
     "access": "public"
   },
   "bin": {
-    "cpdown": "./src/cli.mts"
+    "cpdown": "./dist/cli.js"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,13 @@
   "homepage": "https://github.com/koumatsumoto/confluence-page-downloader#readme",
   "scripts": {
     "build": "tsc",
+    "build:check": "tsc --noEmit",
     "fmt": "prettier -w .",
     "fmt:check": "prettier -c .",
-    "ci": "npm run fmt:check && npm run build && npm run test",
-    "start": "node ./src/cli.mts",
+    "ci": "npm run fmt:check && npm run build:check && npm run test",
+    "start": "npm run build && node ./dist/cli.js",
     "test": "vitest run --coverage",
-    "prepublishOnly": "npm run ci"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "commander": "^14.0.0",

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
-import { ConfluenceClient } from "./client.mts";
+import { ConfluenceClient } from "./client";
 
 // Mock fetch globally
 const mockFetch = vi.fn();

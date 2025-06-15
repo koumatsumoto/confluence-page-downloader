@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { convertToMarkdown } from "./markdown-converter.mts";
-import type { ConfluencePage } from "../confluence/types.mts";
+import { convertToMarkdown } from "./markdown-converter";
+import type { ConfluencePage } from "../confluence/types";
 
 describe("markdown-converter", () => {
   describe("convertToMarkdown", () => {

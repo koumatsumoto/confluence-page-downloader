@@ -3,11 +3,11 @@
  */
 
 import { writeFile } from "node:fs/promises";
-import { loadConfig } from "./config.mts";
-import { ConfluenceClient } from "./confluence/client.mts";
-import { extractPageId, extractBaseUrl } from "./confluence/util.mts";
-import { convertToHtml } from "./converter/html-converter.mts";
-import { convertToMarkdown } from "./converter/markdown-converter.mts";
+import { loadConfig } from "./config";
+import { ConfluenceClient } from "./confluence/client";
+import { extractPageId, extractBaseUrl } from "./confluence/util";
+import { convertToHtml } from "./converter/html-converter";
+import { convertToMarkdown } from "./converter/markdown-converter";
 
 /**
  * Download a Confluence page and save it to a file

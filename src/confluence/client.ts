@@ -2,7 +2,7 @@
  * Confluence API client for fetching page content
  */
 
-import type { ConfluencePage } from "./types.mts";
+import type { ConfluencePage } from "./types";
 
 /**
  * Confluence API client class
