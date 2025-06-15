@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node --experimental-strip-types
 
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { handleCliAction } from "./page-downloader.mts";
 
 const program = new Command();
@@ -17,8 +17,8 @@ program
   .description(packageInfo.description)
   .version(packageInfo.version)
   .argument("<url>", "Confluence page URL")
-  .option("-f, --format <format>", "Output format: html or md", "md")
-  .action(async (url: string, options?: { format?: string }) => {
+  .addOption(new Option("-f, --format <format>", "Output format: html or md").choices(["html", "md"]).default("md"))
+  .action(async (url: string, options: { format: "html" | "md" }) => {
     await handleCliAction(url, options);
   });
 

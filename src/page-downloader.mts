@@ -4,20 +4,12 @@
 
 import { loadConfig } from "./config.mts";
 import { extractPageId, fetchConfluencePage } from "./confluence-client.mts";
-import { savePageToFile, type OutputFormat } from "./file-writer.mts";
+import { savePageToFile } from "./file-writer.mts";
 import { resolve } from "path";
 
 export interface DownloadOptions {
   url: string;
-  format?: OutputFormat;
-}
-
-/**
- * Generate default filename based on page ID and format
- */
-export function generateDefaultFilename(pageId: string, format: OutputFormat = "markdown"): string {
-  const extension = format === "html" ? "html" : "md";
-  return `${pageId}.${extension}`;
+  format: "html" | "md";
 }
 
 /**
@@ -35,8 +27,8 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
     console.log(`Fetching page ${pageId}...`);
     const pageData = await fetchConfluencePage(config, pageId);
 
-    // Determine output path and format
-    const outputPath = generateDefaultFilename(pageId, options.format);
+    // Generate output path
+    const outputPath = `${pageId}.${options.format}`;
     const resolvedPath = resolve(outputPath);
 
     // Save to file
@@ -55,28 +47,17 @@ export async function downloadPage(options: DownloadOptions): Promise<void> {
 /**
  * Handle CLI action for downloading Confluence pages
  */
-export async function handleCliAction(url: string, options?: { format?: string }) {
+export async function handleCliAction(url: string, options: { format: "html" | "md" }) {
   try {
     // Validate URL
     if (!url || !url.includes("atlassian.net")) {
       throw new Error("Please provide a valid Confluence URL");
     }
 
-    // Determine format
-    let format: "html" | "markdown" = "markdown";
-    if (options?.format) {
-      // Normalize format values: accept html, md, markdown
-      const normalizedFormat = options.format === "md" ? "markdown" : options.format;
-      if (normalizedFormat !== "html" && normalizedFormat !== "markdown") {
-        throw new Error("Format must be 'html' or 'md'");
-      }
-      format = normalizedFormat;
-    }
-
     // Download page
     const downloadOptions = {
       url,
-      format,
+      format: options.format,
     };
 
     await downloadPage(downloadOptions);

@@ -3,27 +3,8 @@
  */
 
 import { writeFile, mkdir } from "fs/promises";
-import { dirname, extname } from "path";
+import { dirname } from "path";
 import type { ConfluencePage } from "./confluence-client.mts";
-
-export type OutputFormat = "html" | "markdown";
-
-/**
- * Determine output format from file extension
- */
-export function getOutputFormat(filePath: string): OutputFormat {
-  const ext = extname(filePath).toLowerCase();
-  switch (ext) {
-    case ".md":
-    case ".markdown":
-      return "markdown";
-    case ".html":
-    case ".htm":
-      return "html";
-    default:
-      return "markdown"; // Default to markdown
-  }
-}
 
 /**
  * Convert Confluence export_view format to HTML
@@ -98,26 +79,23 @@ function escapeHtml(text: string): string {
 /**
  * Save page content to file
  */
-export async function savePageToFile(page: ConfluencePage, filePath: string, format?: OutputFormat): Promise<void> {
+export async function savePageToFile(page: ConfluencePage, filePath: string, format: "html" | "md"): Promise<void> {
   try {
     // Ensure directory exists
     const dir = dirname(filePath);
     await mkdir(dir, { recursive: true });
 
-    // Determine format
-    const outputFormat = format || getOutputFormat(filePath);
-
     // Convert content based on format
     let content: string;
-    switch (outputFormat) {
+    switch (format) {
       case "html":
         content = convertToHtml(page);
         break;
-      case "markdown":
+      case "md":
         content = convertToMarkdown(page);
         break;
       default:
-        throw new Error(`Unsupported output format: ${outputFormat}`);
+        throw new Error(`Unsupported output format: ${format}`);
     }
 
     // Write file

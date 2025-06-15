@@ -1,5 +1,4 @@
 import { describe, test, beforeEach, afterEach, expect, vi } from "vitest";
-import { generateDefaultFilename } from "./page-downloader.mts";
 import * as config from "./config.mts";
 import * as confluenceClient from "./confluence-client.mts";
 import * as fileWriter from "./file-writer.mts";
@@ -25,23 +24,6 @@ describe("page-downloader", () => {
   afterEach(() => {
     consoleSpy.mockRestore();
     vi.restoreAllMocks();
-  });
-
-  describe("generateDefaultFilename", () => {
-    test("should generate markdown filename by default", () => {
-      const result = generateDefaultFilename("123456");
-      expect(result).toBe("123456.md");
-    });
-
-    test("should generate HTML filename when specified", () => {
-      const result = generateDefaultFilename("123456", "html");
-      expect(result).toBe("123456.html");
-    });
-
-    test("should generate markdown filename when specified", () => {
-      const result = generateDefaultFilename("123456", "markdown");
-      expect(result).toBe("123456.md");
-    });
   });
 
   describe("downloadPage", () => {
@@ -78,12 +60,13 @@ describe("page-downloader", () => {
 
       await downloadPage({
         url: "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page",
+        format: "md",
       });
 
       expect(mockLoadConfig).toHaveBeenCalled();
       expect(mockExtractPageId).toHaveBeenCalledWith("https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page");
       expect(mockFetchConfluencePage).toHaveBeenCalledWith(mockConfig, "123456");
-      expect(mockSavePageToFile).toHaveBeenCalledWith(mockPageData, expect.stringContaining("123456.md"), undefined);
+      expect(mockSavePageToFile).toHaveBeenCalledWith(mockPageData, expect.stringContaining("123456.md"), "md");
 
       expect(consoleSpy).toHaveBeenCalledWith("Fetching page 123456...");
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringMatching(/Saving to .*123456\.md\.\.\./));
@@ -110,6 +93,7 @@ describe("page-downloader", () => {
       await expect(
         downloadPage({
           url: "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page",
+          format: "md",
         }),
       ).rejects.toThrow("Failed to download page: Missing environment variables");
     });
@@ -121,6 +105,7 @@ describe("page-downloader", () => {
       await expect(
         downloadPage({
           url: "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page",
+          format: "md",
         }),
       ).rejects.toThrow("Failed to download page: Page not found");
     });
@@ -132,6 +117,7 @@ describe("page-downloader", () => {
       await expect(
         downloadPage({
           url: "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page",
+          format: "md",
         }),
       ).rejects.toThrow("Failed to download page: Permission denied");
     });
@@ -143,6 +129,7 @@ describe("page-downloader", () => {
       await expect(
         downloadPage({
           url: "https://example.atlassian.net/wiki/spaces/ABC/pages/123456/Test+Page",
+          format: "md",
         }),
       ).rejects.toThrow("Unknown error occurred while downloading page");
     });

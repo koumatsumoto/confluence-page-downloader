@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
-import { getOutputFormat, convertToHtml, convertToMarkdown, savePageToFile } from "./file-writer.mts";
+import { convertToHtml, convertToMarkdown, savePageToFile } from "./file-writer.mts";
 import type { ConfluencePage } from "./confluence-client.mts";
 
 // Mock fs
@@ -21,34 +21,6 @@ describe("file-writer", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-  });
-
-  describe("getOutputFormat", () => {
-    test("should return markdown for .md extension", () => {
-      expect(getOutputFormat("test.md")).toBe("markdown");
-    });
-
-    test("should return markdown for .markdown extension", () => {
-      expect(getOutputFormat("test.markdown")).toBe("markdown");
-    });
-
-    test("should return html for .html extension", () => {
-      expect(getOutputFormat("test.html")).toBe("html");
-    });
-
-    test("should return html for .htm extension", () => {
-      expect(getOutputFormat("test.htm")).toBe("html");
-    });
-
-    test("should return markdown as default for unknown extensions", () => {
-      expect(getOutputFormat("test.txt")).toBe("markdown");
-      expect(getOutputFormat("test")).toBe("markdown");
-    });
-
-    test("should handle case insensitive extensions", () => {
-      expect(getOutputFormat("test.MD")).toBe("markdown");
-      expect(getOutputFormat("test.HTML")).toBe("html");
-    });
   });
 
   describe("convertToHtml", () => {
@@ -129,11 +101,11 @@ describe("file-writer", () => {
       mockWriteFile.mockResolvedValue();
     });
 
-    test("should save page as markdown by default", async () => {
+    test("should save page as markdown when specified", async () => {
       mockMkdir.mockResolvedValue(undefined);
       mockWriteFile.mockResolvedValue();
 
-      await savePageToFile(mockPage, "test.md");
+      await savePageToFile(mockPage, "test.md", "md");
 
       expect(mockMkdir).toHaveBeenCalled();
       expect(mockWriteFile).toHaveBeenCalledWith("test.md", expect.stringContaining("# Test Page"), "utf-8");
@@ -143,7 +115,7 @@ describe("file-writer", () => {
       mockMkdir.mockResolvedValue(undefined);
       mockWriteFile.mockResolvedValue();
 
-      await savePageToFile(mockPage, "test.html");
+      await savePageToFile(mockPage, "test.html", "html");
 
       expect(mockWriteFile).toHaveBeenCalledWith("test.html", expect.stringContaining("<h1>Test Page</h1>"), "utf-8");
     });
@@ -161,7 +133,7 @@ describe("file-writer", () => {
       mockMkdir.mockResolvedValue(undefined);
       mockWriteFile.mockResolvedValue();
 
-      await savePageToFile(mockPage, "test.md");
+      await savePageToFile(mockPage, "test.md", "md");
 
       expect(mockMkdir).toHaveBeenCalled();
     });
@@ -170,14 +142,14 @@ describe("file-writer", () => {
       mockMkdir.mockResolvedValue(undefined);
       mockWriteFile.mockRejectedValueOnce(new Error("Permission denied"));
 
-      await expect(savePageToFile(mockPage, "test.md")).rejects.toThrow("Failed to save file: Permission denied");
+      await expect(savePageToFile(mockPage, "test.md", "md")).rejects.toThrow("Failed to save file: Permission denied");
     });
 
     test("should handle unknown errors", async () => {
       mockMkdir.mockResolvedValue(undefined);
       mockWriteFile.mockRejectedValueOnce("Unknown error");
 
-      await expect(savePageToFile(mockPage, "test.md")).rejects.toThrow("Unknown error occurred while saving file");
+      await expect(savePageToFile(mockPage, "test.md", "md")).rejects.toThrow("Unknown error occurred while saving file");
     });
 
     test("should throw error for unsupported format", async () => {
